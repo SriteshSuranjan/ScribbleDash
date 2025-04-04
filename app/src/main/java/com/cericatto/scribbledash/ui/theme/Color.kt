@@ -11,6 +11,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val homeBackground = Color(0xFFFEF4EA)
-//val homeBackgroundTitleColor = Color(0xFF483C31)
 val homeBackgroundTitleColor = Color(0xFF514437)
+val homeGreenBorder = Color(0xFF0FD180)
 
+val scribbleSubtitleTextColor = Color(0xFF7F7163)
+val closeScreenIconColor = Color(0xFFA5978A)

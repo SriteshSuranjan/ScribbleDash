@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenRoot
 import com.cericatto.scribbledash.ui.home.HomeScreenRoot
 
 @Composable
@@ -18,6 +19,15 @@ fun NavHostComposable(
 	) {
 		composable<Route.HomeScreen> {
 			HomeScreenRoot(
+				onNavigate = { navController.navigate(it) },
+				onNavigateUp = { navController.navigateUp() },
+				modifier = modifier
+			)
+		}
+		composable<Route.DifficultyScreen> {
+			DifficultyScreenRoot(
+				onNavigate = { navController.navigate(it) },
+				onNavigateUp = { navController.navigateUp() },
 				modifier = modifier
 			)
 		}

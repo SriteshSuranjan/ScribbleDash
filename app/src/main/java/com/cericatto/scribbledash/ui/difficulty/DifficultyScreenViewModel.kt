@@ -1,4 +1,4 @@
-package com.cericatto.scribbledash.ui.home
+package com.cericatto.scribbledash.ui.difficulty
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,17 +15,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(): ViewModel() {
+class DifficultyScreenViewModel @Inject constructor(): ViewModel() {
 
 	private val _events = Channel<UiEvent>()
 	val events = _events.receiveAsFlow()
 
-	private val _state = MutableStateFlow(HomeScreenState())
-	val state: StateFlow<HomeScreenState> = _state.asStateFlow()
+	private val _state = MutableStateFlow(DifficultyScreenState())
+	val state: StateFlow<DifficultyScreenState> = _state.asStateFlow()
 
-	fun onAction(action: HomeScreenAction) {
+	fun onAction(action: DifficultyScreenAction) {
 		when (action) {
-			is HomeScreenAction.NavigateToDifficulty -> navigateToDifficulty()
+			is DifficultyScreenAction.NavigateUp -> navigateUp()
 		}
 	}
 
@@ -33,12 +33,10 @@ class HomeScreenViewModel @Inject constructor(): ViewModel() {
 		_state.update { it.copy(loading = false) }
 	}
 
-	private fun navigateToDifficulty() {
+	private fun navigateUp() {
 		viewModelScope.launch {
 			_events.send(
-				UiEvent.Navigate(
-					Route.DifficultyScreen
-				)
+				UiEvent.NavigateUp
 			)
 		}
 	}
