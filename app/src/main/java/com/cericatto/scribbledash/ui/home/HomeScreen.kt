@@ -1,5 +1,6 @@
 package com.cericatto.scribbledash.ui.home
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.cericatto.scribbledash.R
+import com.cericatto.scribbledash.ui.BottomNavigationBar
 import com.cericatto.scribbledash.ui.common.DynamicStatusBarColor
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ScribbleSubtitleText
@@ -44,6 +48,7 @@ import com.cericatto.scribbledash.ui.utils.contentColor
 
 @Composable
 fun HomeScreenRoot(
+	navController: NavController,
 	modifier: Modifier = Modifier,
 	onNavigate: (Route) -> Unit,
 	onNavigateUp: () -> Unit,
@@ -61,14 +66,17 @@ fun HomeScreenRoot(
 
 	DynamicStatusBarColor()
 	HomeScreen(
+		navController = navController,
 		modifier = modifier,
 		onAction = viewModel::onAction,
 		state = state
 	)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun HomeScreen(
+	navController: NavController,
 	modifier: Modifier = Modifier,
 	onAction: (HomeScreenAction) -> Unit,
 	state: HomeScreenState
@@ -87,11 +95,18 @@ private fun HomeScreen(
 			)
 		}
 	} else {
-		HomeScreenContent(
-			modifier = modifier,
-			onAction = onAction,
-			state = state
-		)
+		Scaffold(
+			bottomBar = {
+				BottomNavigationBar(navController)
+			},
+			modifier = Modifier.fillMaxSize()
+		) { _ ->
+			HomeScreenContent(
+				modifier = modifier,
+				onAction = onAction,
+				state = state
+			)
+		}
 	}
 }
 

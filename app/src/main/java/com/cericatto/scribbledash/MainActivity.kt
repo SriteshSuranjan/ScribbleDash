@@ -23,12 +23,13 @@ class MainActivity : ComponentActivity() {
 			ScribbleDashTheme {
 				val navController = rememberNavController()
 				Scaffold(
-					bottomBar = {
-						BottomNavigationBar(navController)
-					},
+//					bottomBar = {
+//						BottomNavigationBar(navController)
+//					},
 					modifier = Modifier.fillMaxSize()
 				) { innerPadding ->
 					NavHostComposable(
+						navController = navController,
 						modifier = Modifier.padding(innerPadding)
 					)
 				}
