@@ -2,6 +2,7 @@ package com.cericatto.scribbledash.ui.difficulty
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -101,7 +102,7 @@ private fun DifficultyScreenContent(
 			.padding(10.dp)
 	) {
 		CloseScreenIcon(
-			onAction = onAction
+			onClose = { onAction(DifficultyScreenAction.NavigateUp) }
 		)
 		ScribbleTitleText(
 			text = "Start drawing!",
@@ -110,12 +111,14 @@ private fun DifficultyScreenContent(
 		ScribbleSubtitleText(
 			text = "Choose a difficulty setting"
 		)
-		DifficultyRow()
+		DifficultyRow(onAction)
 	}
 }
 
 @Composable
-private fun DifficultyRow() {
+private fun DifficultyRow(
+	onAction: (DifficultyScreenAction) -> Unit
+) {
 	Row(
 		horizontalArrangement = Arrangement.SpaceBetween,
 		verticalAlignment = Alignment.CenterVertically,
@@ -123,20 +126,23 @@ private fun DifficultyRow() {
 			.padding(top = 80.dp)
 	) {
 		DifficultyRowItem(
+			modifier = Modifier.weight(1f),
+			onAction = onAction,
 			difficulty = "Beginner",
-			drawableId = R.drawable.difficulty_beginner,
-			modifier = Modifier.weight(1f)
+			drawableId = R.drawable.difficulty_beginner
 		)
 		DifficultyRowItem(
-			difficulty = "Challenging",
-			drawableId = R.drawable.difficulty_challenging,
 			modifier = Modifier.padding(bottom = 40.dp)
-				.weight(1f)
+				.weight(1f),
+			onAction = onAction,
+			difficulty = "Challenging",
+			drawableId = R.drawable.difficulty_challenging
 		)
 		DifficultyRowItem(
+			modifier = Modifier.weight(1f),
+			onAction = onAction,
 			difficulty = "Master",
 			drawableId = R.drawable.difficulty_master,
-			modifier = Modifier.weight(1f)
 		)
 	}
 }
@@ -144,6 +150,7 @@ private fun DifficultyRow() {
 @Composable
 private fun DifficultyRowItem(
 	modifier: Modifier = Modifier,
+	onAction: (DifficultyScreenAction) -> Unit,
 	difficulty: String,
 	drawableId: Int
 ) {
@@ -151,6 +158,9 @@ private fun DifficultyRowItem(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		verticalArrangement = Arrangement.Center,
 		modifier = modifier
+			.clickable {
+				onAction(DifficultyScreenAction.NavigateToDraw)
+			}
 	) {
 		Box(
 			contentAlignment = Alignment.Center,

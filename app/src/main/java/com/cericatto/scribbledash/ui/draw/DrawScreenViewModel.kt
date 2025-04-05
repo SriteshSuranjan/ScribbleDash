@@ -1,9 +1,8 @@
-package com.cericatto.scribbledash.ui.difficulty
+package com.cericatto.scribbledash.ui.draw
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cericatto.scribbledash.ui.common.UiEvent
-import com.cericatto.scribbledash.ui.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,18 +14,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DifficultyScreenViewModel @Inject constructor(): ViewModel() {
+class DrawScreenViewModel @Inject constructor(): ViewModel() {
 
 	private val _events = Channel<UiEvent>()
 	val events = _events.receiveAsFlow()
 
-	private val _state = MutableStateFlow(DifficultyScreenState())
-	val state: StateFlow<DifficultyScreenState> = _state.asStateFlow()
+	private val _state = MutableStateFlow(DrawScreenState())
+	val state: StateFlow<DrawScreenState> = _state.asStateFlow()
 
-	fun onAction(action: DifficultyScreenAction) {
+	fun onAction(action: DrawScreenAction) {
 		when (action) {
-			is DifficultyScreenAction.NavigateUp -> navigateUp()
-			is DifficultyScreenAction.NavigateToDraw -> navigateToDraw()
+			is DrawScreenAction.NavigateUp -> navigateUp()
+			is DrawScreenAction.OnUpdateClickedPosition -> TODO()
 		}
 	}
 
@@ -38,16 +37,6 @@ class DifficultyScreenViewModel @Inject constructor(): ViewModel() {
 		viewModelScope.launch {
 			_events.send(
 				UiEvent.NavigateUp
-			)
-		}
-	}
-
-	private fun navigateToDraw() {
-		viewModelScope.launch {
-			_events.send(
-				UiEvent.Navigate(
-					Route.DrawScreen
-				)
 			)
 		}
 	}

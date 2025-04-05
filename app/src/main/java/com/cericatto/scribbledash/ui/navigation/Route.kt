@@ -11,4 +11,7 @@ sealed interface Route {
 
 	@Serializable
 	data object DifficultyScreen: Route
+
+	@Serializable
+	data object DrawScreen: Route
 }

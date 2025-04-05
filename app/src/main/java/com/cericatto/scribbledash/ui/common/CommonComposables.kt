@@ -1,10 +1,12 @@
 package com.cericatto.scribbledash.ui.common
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,22 +18,61 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenAction
+import com.cericatto.scribbledash.R
+import com.cericatto.scribbledash.model.initOffsetList
+import com.cericatto.scribbledash.ui.draw.DrawScreenState
+import com.cericatto.scribbledash.ui.draw.initMoveList
 import com.cericatto.scribbledash.ui.theme.bagelFatOneRegularFont
+import com.cericatto.scribbledash.ui.theme.clearCanvasButtonDisabled
+import com.cericatto.scribbledash.ui.theme.clearCanvasButtonEnabled
 import com.cericatto.scribbledash.ui.theme.closeScreenIconColor
+import com.cericatto.scribbledash.ui.theme.historyButtonBackgroundDisabled
+import com.cericatto.scribbledash.ui.theme.historyButtonBackgroundEnabled
+import com.cericatto.scribbledash.ui.theme.historyButtonTintDisabled
+import com.cericatto.scribbledash.ui.theme.historyButtonTintEnabled
 import com.cericatto.scribbledash.ui.theme.homeBackground
 import com.cericatto.scribbledash.ui.theme.homeBackgroundTitleColor
 import com.cericatto.scribbledash.ui.theme.scribbleSubtitleTextColor
+
+enum class UndoRedoType {
+	UNDO, REDO
+}
+
+@Composable
+fun getCanvasSize(): Dp {
+	val configuration = LocalConfiguration.current
+	return if (isLandscapeOrientation()) {
+		configuration.screenHeightDp.dp
+	} else {
+		configuration.screenWidthDp.dp
+	}
+}
+
+@Composable
+fun isLandscapeOrientation(): Boolean {
+	val context = LocalContext.current
+	val orientation = context.resources.configuration.orientation
+	return when (orientation) {
+		Configuration.ORIENTATION_LANDSCAPE -> true
+		else -> false
+	}
+}
 
 @Suppress("DEPRECATION")
 @Composable
@@ -99,16 +140,14 @@ fun ScribbleSubtitleText(
 
 @Composable
 fun CloseScreenIcon(
-	onAction: (DifficultyScreenAction) -> Unit
+	onClose: () -> Unit
 ) {
 	Icon(
 		imageVector = Icons.Filled.Close,
 		contentDescription = "Close screen icon",
 		tint = closeScreenIconColor,
 		modifier = Modifier
-			.clickable {
-				onAction(DifficultyScreenAction.NavigateUp)
-			}
+			.clickable { onClose() }
 			.padding(top = 5.dp, end = 5.dp)
 			.background(
 				color = closeScreenIconColor,
@@ -121,5 +160,125 @@ fun CloseScreenIcon(
 			)
 			.size(32.dp)
 			.padding(4.dp)
+	)
+}
+
+@Composable
+fun UndoRedoButton(
+	modifier: Modifier = Modifier,
+	type: UndoRedoType,
+	state: DrawScreenState
+) {
+	val drawableId = when (type) {
+		UndoRedoType.UNDO -> R.drawable.reply
+		UndoRedoType.REDO -> R.drawable.forward
+	}
+	val isEnabled = state.moves.isNotEmpty()
+	val backgroundColor = if (isEnabled) historyButtonBackgroundEnabled
+		else historyButtonBackgroundDisabled
+	val tintColor = if (isEnabled) historyButtonTintEnabled
+		else historyButtonTintDisabled
+	Icon(
+		painter = painterResource(drawableId),
+		contentDescription = "La la la la la",
+		tint = tintColor,
+		modifier = modifier
+			.shadow(
+				elevation = 5.dp,
+				shape = RoundedCornerShape(20.dp),
+			)
+			.clickable {
+				//
+			}
+			.background(
+				color = backgroundColor,
+				shape = RoundedCornerShape(20.dp)
+			)
+			.padding(15.dp)
+			.aspectRatio(1f)
+	)
+}
+
+@Composable
+fun ClearCanvasButton(
+	modifier: Modifier = Modifier,
+	text: String = "Clear Canvas",
+	state: DrawScreenState
+) {
+	val isEnabled = state.moves.isNotEmpty()
+	val backgroundColor = if (isEnabled) clearCanvasButtonEnabled else clearCanvasButtonDisabled
+	Text(
+		text = text.uppercase(),
+		style = TextStyle(
+			color = Color.White,
+			fontFamily = bagelFatOneRegularFont,
+			fontSize = 20.sp,
+			textAlign = TextAlign.Center
+		),
+		modifier = modifier
+			.shadow(
+				elevation = 5.dp,
+				shape = RoundedCornerShape(15.dp),
+			)
+			.background(
+				color = Color.White,
+				shape = RoundedCornerShape(15.dp)
+			)
+			.padding(7.dp)
+			.background(
+				color = backgroundColor,
+				shape = RoundedCornerShape(15.dp)
+			)
+			.padding(horizontal = 20.dp, vertical = 15.dp)
+	)
+}
+
+@Preview(
+	name = "Disabled Preview",
+	showBackground = true
+)
+@Composable
+fun UndoRedoButtonDisabledPreview() {
+	UndoRedoButton(
+		type = UndoRedoType.REDO,
+		state = DrawScreenState()
+	)
+}
+
+@Preview(
+	name = "Enabled Preview",
+	showBackground = true
+)
+@Composable
+fun UndoRedoButtonEnabledPreview() {
+	UndoRedoButton(
+		type = UndoRedoType.UNDO,
+		state = DrawScreenState().copy(
+			moves = initMoveList(initOffsetList())
+		)
+	)
+}
+
+@Preview(
+	name = "Disabled Preview",
+	showBackground = true
+)
+@Composable
+fun ClearCanvasButtonDisabledPreview() {
+	ClearCanvasButton(
+		state = DrawScreenState()
+	)
+}
+
+@Preview(
+	name = "Enabled Preview",
+	showBackground = true
+)
+@Composable
+fun ClearCanvasButtonEnabledPreview() {
+	ClearCanvasButton(
+		state = DrawScreenState().copy(
+			moves = initMoveList(initOffsetList())
+		)
 	)
 }
