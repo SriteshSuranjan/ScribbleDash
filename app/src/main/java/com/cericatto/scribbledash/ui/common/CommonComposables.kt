@@ -37,7 +37,7 @@ import androidx.core.view.WindowCompat
 import com.cericatto.scribbledash.R
 import com.cericatto.scribbledash.model.initOffsetList
 import com.cericatto.scribbledash.ui.draw.DrawScreenState
-import com.cericatto.scribbledash.ui.draw.initMoveList
+import com.cericatto.scribbledash.ui.draw.initPathList
 import com.cericatto.scribbledash.ui.theme.bagelFatOneRegularFont
 import com.cericatto.scribbledash.ui.theme.clearCanvasButtonDisabled
 import com.cericatto.scribbledash.ui.theme.clearCanvasButtonEnabled
@@ -173,7 +173,7 @@ fun UndoRedoButton(
 		UndoRedoType.UNDO -> R.drawable.reply
 		UndoRedoType.REDO -> R.drawable.forward
 	}
-	val isEnabled = state.moves.isNotEmpty()
+	val isEnabled = state.paths.isNotEmpty()
 	val backgroundColor = if (isEnabled) historyButtonBackgroundEnabled
 		else historyButtonBackgroundDisabled
 	val tintColor = if (isEnabled) historyButtonTintEnabled
@@ -203,9 +203,10 @@ fun UndoRedoButton(
 fun ClearCanvasButton(
 	modifier: Modifier = Modifier,
 	text: String = "Clear Canvas",
-	state: DrawScreenState
+	state: DrawScreenState,
+	onClick: () -> Unit = {}
 ) {
-	val isEnabled = state.moves.isNotEmpty()
+	val isEnabled = state.paths.isNotEmpty()
 	val backgroundColor = if (isEnabled) clearCanvasButtonEnabled else clearCanvasButtonDisabled
 	Text(
 		text = text.uppercase(),
@@ -216,6 +217,9 @@ fun ClearCanvasButton(
 			textAlign = TextAlign.Center
 		),
 		modifier = modifier
+			.clickable {
+				onClick()
+			}
 			.shadow(
 				elevation = 5.dp,
 				shape = RoundedCornerShape(15.dp),
@@ -254,7 +258,7 @@ fun UndoRedoButtonEnabledPreview() {
 	UndoRedoButton(
 		type = UndoRedoType.UNDO,
 		state = DrawScreenState().copy(
-			moves = initMoveList(initOffsetList())
+			paths = initPathList(initOffsetList())
 		)
 	)
 }
@@ -278,7 +282,7 @@ fun ClearCanvasButtonDisabledPreview() {
 fun ClearCanvasButtonEnabledPreview() {
 	ClearCanvasButton(
 		state = DrawScreenState().copy(
-			moves = initMoveList(initOffsetList())
+			paths = initPathList(initOffsetList())
 		)
 	)
 }
