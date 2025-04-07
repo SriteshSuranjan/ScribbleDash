@@ -128,15 +128,14 @@ private fun DrawScreenContent(
 				UndoRedoButton(
 					modifier = Modifier.weight(1f),
 					type = UndoRedoType.UNDO,
-					state = state.copy(
-							paths = initPathList(initOffsetList())
-						)
-
+					state = state,
+					onClick = { onAction(DrawScreenAction.OnUndoButtonClicked) }
 				)
 				UndoRedoButton(
 					modifier = Modifier.weight(1f),
 					type = UndoRedoType.REDO,
-					state = state
+					state = state,
+					onClick = { onAction(DrawScreenAction.OnRedoButtonClicked) }
 				)
 				ClearCanvasButton(
 					modifier = Modifier.weight(4f),
@@ -220,7 +219,7 @@ private fun GridCanvas(
 		)
 
 		// Draw paths.
-		state.paths.fastForEach { pathData ->
+		state.history.fastForEach { pathData ->
 			drawPath(
 				path = pathData.path,
 				color = pathData.color,

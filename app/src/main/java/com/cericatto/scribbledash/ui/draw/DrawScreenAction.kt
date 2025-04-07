@@ -10,4 +10,6 @@ sealed interface DrawScreenAction {
 	data object OnPathEnd: DrawScreenAction
 	data class OnSelectColor(val color: Color): DrawScreenAction
 	data object OnClearCanvasClick: DrawScreenAction
+	data object OnUndoButtonClicked: DrawScreenAction
+	data object OnRedoButtonClicked: DrawScreenAction
 }

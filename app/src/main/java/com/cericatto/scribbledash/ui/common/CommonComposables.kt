@@ -167,13 +167,21 @@ fun CloseScreenIcon(
 fun UndoRedoButton(
 	modifier: Modifier = Modifier,
 	type: UndoRedoType,
-	state: DrawScreenState
+	state: DrawScreenState,
+	onClick: () -> Unit = {}
 ) {
 	val drawableId = when (type) {
 		UndoRedoType.UNDO -> R.drawable.reply
 		UndoRedoType.REDO -> R.drawable.forward
 	}
-	val isEnabled = state.paths.isNotEmpty()
+	val isEnabled = when (type) {
+		UndoRedoType.UNDO -> {
+			state.history.isNotEmpty()
+		}
+		UndoRedoType.REDO -> {
+			state.slidingWindows.isNotEmpty()
+		}
+	}
 	val backgroundColor = if (isEnabled) historyButtonBackgroundEnabled
 		else historyButtonBackgroundDisabled
 	val tintColor = if (isEnabled) historyButtonTintEnabled
@@ -188,7 +196,9 @@ fun UndoRedoButton(
 				shape = RoundedCornerShape(20.dp),
 			)
 			.clickable {
-				//
+				if (isEnabled) {
+					onClick()
+				}
 			}
 			.background(
 				color = backgroundColor,
