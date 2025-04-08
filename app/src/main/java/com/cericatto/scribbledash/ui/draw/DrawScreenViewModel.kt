@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Stack
 import javax.inject.Inject
 
 @HiltViewModel
@@ -46,9 +47,8 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 		}
 	}
 
+	/*
 	private fun onPathEnd() {
-		println("---------- ON PATH END")
-
 		val state = _state.value
 		val currentPathData = state.currentPath ?: return
 		_state.update {
@@ -58,13 +58,26 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				history = it.history + currentPathData
 			)
 		}
-		println("slidingWindows: ${state.slidingWindows}")
-		println("history: ${state.history.map { it.id }}")
-		println("paths: ${state.paths.map { it.id }}")
+	}
+	 */
+
+	private fun onPathEnd() {
+		viewModelScope.launch {
+			val state = _state.value
+			val currentPathData = state.currentPath ?: return@launch
+			state.currentPath?.let { completedPath ->
+				_state.update {
+					it.copy(
+						paths = it.paths + currentPathData,
+						actionStack = Stack(), // Clear stack on new action
+						currentPath = null
+					)
+				}
+			}
+		}
 	}
 
 	private fun onNewPathStart() {
-		println("---------- NEW PATH START")
 		val state = _state.value
 		val newCount = state.count + 1
 
@@ -75,16 +88,10 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 					color = it.selectedColor,
 					path = emptyList(),
 				),
-				slidingWindows = emptyList(),
+				actionStack = Stack(), // Clear stack on new path drawn
 				count = newCount
 			)
 		}
-
-		println("id: ${_state.value.currentPath?.id}")
-		println("count: $newCount")
-		println("slidingWindows: ${state.slidingWindows}")
-		println("history: ${state.history.map { it.id }}")
-		println("paths: ${state.paths.map { it.id }}")
 	}
 
 	private fun onDraw(offset: Offset) {
@@ -103,8 +110,7 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 			it.copy(
 				currentPath = null,
 				paths = emptyList(),
-				history = emptyList(),
-				slidingWindows = emptyList(),
+				actionStack = Stack(), // Clear stack on Canvas cleared
 				count = -1
 			)
 		}
@@ -146,6 +152,7 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 	}
 	 */
 
+	/*
 	private fun onUndoButtonClicked() {
 		val currentState = _state.value
 		if (currentState.history.size <= 1) return // Nothing to undo if history is empty or has 1 item
@@ -164,6 +171,32 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				it.copy(
 					slidingWindows = newSlidingWindows,
 					history = newHistory
+				)
+			}
+		}
+	}
+	 */
+
+	private fun onUndoButtonClicked() {
+		viewModelScope.launch {
+			val currentState = _state.value
+//			if (currentState.paths.isEmpty() || currentState.actionStack.isEmpty()) {
+			if (currentState.paths.isEmpty()) {
+				return@launch
+			}
+
+			val pathToRemove = currentState.paths.last()
+			val newPaths = currentState.paths.dropLast(1)
+			val newActionStack = Stack<PathData>().apply {
+				addAll(currentState.actionStack)
+				if (size >= HISTORY_LIMIT) removeAt(0) // Remove oldest if at limit.
+				push(pathToRemove)
+			}
+
+			_state.update {
+				it.copy(
+					paths = newPaths,
+					actionStack = newActionStack
 				)
 			}
 		}
@@ -193,6 +226,7 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 	}
 	 */
 
+	/*
 	private fun onRedoButtonClicked() {
 		val currentState = _state.value
 		if (currentState.slidingWindows.isEmpty()) return // Nothing to redo
@@ -205,6 +239,26 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				it.copy(
 					slidingWindows = newSlidingWindows,
 					history = newHistory
+				)
+			}
+		}
+	}
+	 */
+
+	private fun onRedoButtonClicked() {
+		viewModelScope.launch {
+			val currentState = _state.value
+			if (currentState.actionStack.isEmpty()) {
+				return@launch
+			}
+
+			val pathToRedo = currentState.actionStack.pop()
+			val newPaths = currentState.paths + pathToRedo
+
+			_state.update {
+				it.copy(
+					paths = newPaths,
+					actionStack = currentState.actionStack
 				)
 			}
 		}

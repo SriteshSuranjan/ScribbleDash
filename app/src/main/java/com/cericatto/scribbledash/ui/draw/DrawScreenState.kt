@@ -4,6 +4,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import com.cericatto.scribbledash.model.PathData
 import com.cericatto.scribbledash.model.initOffsetList
+import java.util.Stack
 
 const val HISTORY_LIMIT = 5
 
@@ -12,8 +13,9 @@ data class DrawScreenState(
 	val selectedColor: Color = Color.Black,
 	val currentPath: PathData? = null,
 	val paths: List<PathData> = emptyList(),
-	val history: List<PathData> = emptyList(),
-	val slidingWindows: List<Int> = emptyList()
+//	val history: List<PathData> = emptyList(),
+//	val slidingWindows: List<Int> = emptyList()
+	val actionStack: Stack<PathData> = Stack()
 )
 
 fun initPathList(): List<PathData> {

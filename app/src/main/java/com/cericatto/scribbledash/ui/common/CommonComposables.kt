@@ -176,10 +176,10 @@ fun UndoRedoButton(
 	}
 	val isEnabled = when (type) {
 		UndoRedoType.UNDO -> {
-			state.history.isNotEmpty()
+			state.paths.isNotEmpty()
 		}
 		UndoRedoType.REDO -> {
-			state.slidingWindows.isNotEmpty()
+			state.actionStack.isNotEmpty()
 		}
 	}
 	val backgroundColor = if (isEnabled) historyButtonBackgroundEnabled

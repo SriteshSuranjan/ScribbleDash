@@ -220,7 +220,7 @@ private fun GridCanvas(
 		)
 
 		// Draw paths.
-		state.history.fastForEach { pathData ->
+		state.paths.fastForEach { pathData ->
 			drawPath(
 				path = pathData.path,
 				color = pathData.color,
