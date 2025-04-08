@@ -8,7 +8,7 @@ import com.cericatto.scribbledash.model.initOffsetList
 const val HISTORY_LIMIT = 5
 
 data class DrawScreenState(
-	val count: Int = 0,
+	val count: Int = -1,
 	val selectedColor: Color = Color.Black,
 	val currentPath: PathData? = null,
 	val paths: List<PathData> = emptyList(),

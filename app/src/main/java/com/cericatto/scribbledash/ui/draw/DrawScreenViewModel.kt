@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.compareTo
 
 @HiltViewModel
 class DrawScreenViewModel @Inject constructor() : ViewModel() {
@@ -49,7 +48,9 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 
 	private fun onPathEnd() {
 		println("---------- ON PATH END")
-		val currentPathData = state.value.currentPath ?: return
+
+		val state = _state.value
+		val currentPathData = state.currentPath ?: return
 		_state.update {
 			it.copy(
 				currentPath = null,
@@ -57,35 +58,36 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				history = it.history + currentPathData
 			)
 		}
+		println("slidingWindows: ${state.slidingWindows}")
+		println("history: ${state.history.map { it.id }}")
+		println("paths: ${state.paths.map { it.id }}")
 	}
 
 	private fun onNewPathStart() {
-		println("---------- ON NEW PATH START")
-		val paths = _state.value.paths
-//		val newId = if (paths.isNotEmpty()) {
-//			paths[paths.lastIndex].id + 1
-//		} else 0
+		println("---------- NEW PATH START")
+		val state = _state.value
+		val newCount = state.count + 1
 
-		println("slidingWindows: ${_state.value.slidingWindows}")
-		println("history: ${_state.value.history}")
 		_state.update {
 			it.copy(
 				currentPath = PathData(
-//					id = System.currentTimeMillis().toString(),
-					id = it.count,
+					id = newCount,
 					color = it.selectedColor,
 					path = emptyList(),
 				),
 				slidingWindows = emptyList(),
-				count = it.count + 1
+				count = newCount
 			)
 		}
-		println("slidingWindows: ${_state.value.slidingWindows}")
-		println("history: ${_state.value.history}")
+
+		println("id: ${_state.value.currentPath?.id}")
+		println("count: $newCount")
+		println("slidingWindows: ${state.slidingWindows}")
+		println("history: ${state.history.map { it.id }}")
+		println("paths: ${state.paths.map { it.id }}")
 	}
 
 	private fun onDraw(offset: Offset) {
-//		println("---------- ON DRAW")
 		val currentPath = state.value.currentPath ?: return
 		_state.update {
 			it.copy(
@@ -94,7 +96,6 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				)
 			)
 		}
-//		println("paths: ${_state.value.paths}")
 	}
 
 	private fun onClearCanvasClick() {
@@ -103,7 +104,8 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				currentPath = null,
 				paths = emptyList(),
 				history = emptyList(),
-				slidingWindows = emptyList()
+				slidingWindows = emptyList(),
+				count = -1
 			)
 		}
 	}
@@ -111,35 +113,44 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 	private fun onUndoButtonClicked() {
 		println("---------- UNDO")
 
+		var newSlidingWindows : List<Int> = emptyList()
+		var newHistory : List<PathData> = emptyList()
+		val state = _state.value
+
+		println("slidingWindows: ${state.slidingWindows}")
+		println("history: ${state.history.map { it.id }}")
+		println("paths: ${state.paths.map { it.id }}")
+		println("----->>>")
+
 		viewModelScope.launch {
-			val slidingWindows = _state.value.slidingWindows
-			val history = _state.value.history
-			var newSlidingWindows : List<Int> = emptyList()
-			var newHistory : List<PathData> = emptyList()
-			if (slidingWindows.size >= 5) {
+			if (state.slidingWindows.size >= HISTORY_LIMIT) {
 				// Remove first item of slidingWindows.
-				newSlidingWindows = slidingWindows.slice(1..slidingWindows.size - 1)
+				newSlidingWindows = state.slidingWindows.slice(1..state.slidingWindows.size - 1)
 
 				// Add to slidingWindows last index of history.
-				val lastIndex = history.size - 1
-				newSlidingWindows = newSlidingWindows + lastIndex
+				val lastItem = state.history.last()
+				newSlidingWindows = newSlidingWindows + lastItem.id
 
 				// Remove last item of history.
-				newHistory = history.slice(0..lastIndex - 1)
+				newHistory = state.history.slice(0..state.history.size - 2)
 			} else {
+				println(">>> slidingWindows.size < 5")
+
 				// Add to slidingWindows last index of history.
-				val lastIndex = history.size - 1
-//				if (lastIndex !in slidingWindows) {
-					newSlidingWindows = slidingWindows + lastIndex
-//				}
+				val lastItem = state.history.last()
+				newSlidingWindows = state.slidingWindows + lastItem.id
+
+				println(">>> lastItem.id: ${lastItem.id}")
 
 				// Remove last item of history.
-				newHistory = history.slice(0..lastIndex - 1)
+				newHistory = state.history.slice(0..state.history.size - 2)
 			}
-			// Update state.
 
+			// Update state.
 			println("slidingWindows: $newSlidingWindows")
-			println("history: $newHistory")
+			println("history: ${newHistory.map { it.id }}")
+			println("paths: ${state.paths.map { it.id }}")
+			println("<<<-----")
 			_state.update {
 				it.copy(
 					slidingWindows = newSlidingWindows,
@@ -152,24 +163,28 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 	private fun onRedoButtonClicked() {
 		println("---------- REDO")
 
-		viewModelScope.launch {
-			val slidingWindows = _state.value.slidingWindows
-			var newSlidingWindows : List<Int> = emptyList()
-			val history = _state.value.history
-			val paths = _state.value.paths
+		var newSlidingWindows : List<Int> = emptyList()
+		val state = _state.value
+		println("slidingWindows: ${state.slidingWindows}")
+		println("history: ${state.history.map { it.id }}")
+		println("paths: ${state.paths.map { it.id }}")
+		println("----->>>")
 
+		viewModelScope.launch {
 			// Remove item of the last index of slidingWindows. This is the index of history.
-			val item = slidingWindows.last()
-			val slidingWindowsSize = slidingWindows.size
-			newSlidingWindows = slidingWindows.slice(0..slidingWindowsSize - 2)
+			val item = state.slidingWindows.last()
+			val slidingWindowsSize = state.slidingWindows.size
+			newSlidingWindows = state.slidingWindows.slice(0..slidingWindowsSize - 2)
 			println("item: $item")
 
 			// Add this item into history.
-			var newHistory = history + paths[item]
+			var newHistory = state.history + state.paths[item]
 
 			// Update state.
 			println("slidingWindows: $newSlidingWindows")
-			println("history: $newHistory")
+			println("history: ${newHistory.map { it.id }}")
+			println("paths: ${state.paths.map { it.id }}")
+			println("<<<-----")
 			_state.update {
 				it.copy(
 					slidingWindows = newSlidingWindows,
