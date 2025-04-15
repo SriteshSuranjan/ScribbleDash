@@ -47,20 +47,6 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 		}
 	}
 
-	/*
-	private fun onPathEnd() {
-		val state = _state.value
-		val currentPathData = state.currentPath ?: return
-		_state.update {
-			it.copy(
-				currentPath = null,
-				paths = it.paths + currentPathData,
-				history = it.history + currentPathData
-			)
-		}
-	}
-	 */
-
 	private fun onPathEnd() {
 		viewModelScope.launch {
 			val state = _state.value
@@ -116,71 +102,9 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 		}
 	}
 
-	/*
-	private fun onUndoButtonClicked() {
-		var newSlidingWindows : List<Int> = emptyList()
-		var newHistory : List<PathData> = emptyList()
-		val state = _state.value
-		viewModelScope.launch {
-			if (state.slidingWindows.size >= HISTORY_LIMIT) {
-				// Remove first item of slidingWindows.
-				newSlidingWindows = state.slidingWindows.slice(1..state.slidingWindows.size - 1)
-
-				// Add to slidingWindows last index of history.
-				val lastItem = state.history.last()
-				newSlidingWindows = newSlidingWindows + lastItem.id
-
-				// Remove last item of history.
-				newHistory = state.history.slice(0..state.history.size - 2)
-			} else {
-				// Add to slidingWindows last index of history.
-				val lastItem = state.history.last()
-				newSlidingWindows = state.slidingWindows + lastItem.id
-
-				// Remove last item of history.
-				newHistory = state.history.slice(0..state.history.size - 2)
-			}
-
-			// Update state.
-			_state.update {
-				it.copy(
-					slidingWindows = newSlidingWindows,
-					history = newHistory
-				)
-			}
-		}
-	}
-	 */
-
-	/*
-	private fun onUndoButtonClicked() {
-		val currentState = _state.value
-		if (currentState.history.size <= 1) return // Nothing to undo if history is empty or has 1 item
-
-		viewModelScope.launch {
-			val lastItem = currentState.history.last()
-			val newHistory = currentState.history.dropLast(1)
-			val newSlidingWindows = when {
-				currentState.slidingWindows.size >= HISTORY_LIMIT -> {
-					currentState.slidingWindows.drop(1) + lastItem.id
-				}
-				else -> currentState.slidingWindows + lastItem.id
-			}
-
-			_state.update {
-				it.copy(
-					slidingWindows = newSlidingWindows,
-					history = newHistory
-				)
-			}
-		}
-	}
-	 */
-
 	private fun onUndoButtonClicked() {
 		viewModelScope.launch {
 			val currentState = _state.value
-//			if (currentState.paths.isEmpty() || currentState.actionStack.isEmpty()) {
 			if (currentState.paths.isEmpty()) {
 				return@launch
 			}
@@ -201,49 +125,6 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 			}
 		}
 	}
-
-	/*
-	private fun onRedoButtonClicked() {
-		var newSlidingWindows : List<Int> = emptyList()
-		val state = _state.value
-		viewModelScope.launch {
-			// Remove item of the last index of slidingWindows. This is the index of history.
-			val item = state.slidingWindows.last()
-			val slidingWindowsSize = state.slidingWindows.size
-			newSlidingWindows = state.slidingWindows.slice(0..slidingWindowsSize - 2)
-
-			// Add this item into history.
-			var newHistory = state.history + state.paths[item]
-
-			// Update state.
-			_state.update {
-				it.copy(
-					slidingWindows = newSlidingWindows,
-					history = newHistory
-				)
-			}
-		}
-	}
-	 */
-
-	/*
-	private fun onRedoButtonClicked() {
-		val currentState = _state.value
-		if (currentState.slidingWindows.isEmpty()) return // Nothing to redo
-
-		viewModelScope.launch {
-			val lastIndex = currentState.slidingWindows.last()
-			val newSlidingWindows = currentState.slidingWindows.dropLast(1)
-			val newHistory = currentState.history + currentState.paths[lastIndex]
-			_state.update {
-				it.copy(
-					slidingWindows = newSlidingWindows,
-					history = newHistory
-				)
-			}
-		}
-	}
-	 */
 
 	private fun onRedoButtonClicked() {
 		viewModelScope.launch {

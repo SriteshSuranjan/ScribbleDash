@@ -34,7 +34,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.cericatto.scribbledash.R
 import com.cericatto.scribbledash.ui.BottomNavigationBar
-import com.cericatto.scribbledash.ui.common.DynamicStatusBarColor
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ScribbleSubtitleText
 import com.cericatto.scribbledash.ui.common.ScribbleTitleText
@@ -64,7 +63,7 @@ fun HomeScreenRoot(
 		}
 	}
 
-	DynamicStatusBarColor()
+//	DynamicStatusBarColor()
 	HomeScreen(
 		navController = navController,
 		modifier = modifier,

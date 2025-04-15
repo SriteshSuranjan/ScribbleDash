@@ -191,10 +191,10 @@ fun UndoRedoButton(
 		contentDescription = "La la la la la",
 		tint = tintColor,
 		modifier = modifier
-			.shadow(
-				elevation = 5.dp,
-				shape = RoundedCornerShape(20.dp),
-			)
+//			.shadow(
+//				elevation = 5.dp,
+//				shape = RoundedCornerShape(20.dp),
+//			)
 			.clickable {
 				if (isEnabled) {
 					onClick()

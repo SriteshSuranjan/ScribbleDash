@@ -27,7 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cericatto.scribbledash.R
 import com.cericatto.scribbledash.ui.common.CloseScreenIcon
-import com.cericatto.scribbledash.ui.common.DynamicStatusBarColor
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ScribbleSubtitleText
 import com.cericatto.scribbledash.ui.common.ScribbleTitleText
@@ -53,7 +52,7 @@ fun DifficultyScreenRoot(
 		}
 	}
 
-	DynamicStatusBarColor()
+//	DynamicStatusBarColor()
 	DifficultyScreen(
 		modifier = modifier,
 		onAction = viewModel::onAction,

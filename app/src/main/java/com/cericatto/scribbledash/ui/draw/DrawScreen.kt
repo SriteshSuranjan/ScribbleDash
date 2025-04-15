@@ -36,10 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.cericatto.scribbledash.model.initOffsetList
 import com.cericatto.scribbledash.ui.common.ClearCanvasButton
 import com.cericatto.scribbledash.ui.common.CloseScreenIcon
-import com.cericatto.scribbledash.ui.common.DynamicStatusBarColor
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ScribbleTitleText
 import com.cericatto.scribbledash.ui.common.UiEvent
@@ -67,7 +65,7 @@ fun DrawScreenRoot(
 		}
 	}
 
-	DynamicStatusBarColor()
+//	DynamicStatusBarColor()
 	DrawScreen(
 		modifier = modifier,
 		onAction = viewModel::onAction,
@@ -180,7 +178,7 @@ private fun GridCanvas(
 	state: DrawScreenState,
 	canvasSize: Dp = 300.dp,
 	gridSize: Int = 3,
-	lineColor: Color = Color.LightGray,
+	lineColor: Color = Color.LightGray.copy(alpha = 0.4f),
 	lineThickness: Float = 3f
 ) {
 	var cellSize by remember { mutableFloatStateOf(0f) }
@@ -280,7 +278,7 @@ private fun Modifier.canvasModifier(
 		color = lineColor,
 		shape = RoundedCornerShape(radius)
 	)
-	.padding(1.dp)
+	.padding(0.5.dp)
 	.background(
 		color = Color.White,
 		shape = RoundedCornerShape(radius)
@@ -290,7 +288,7 @@ private fun Modifier.canvasModifier(
 		color = lineColor,
 		shape = RoundedCornerShape(radius)
 	)
-	.padding(1.dp)
+	.padding(0.5.dp)
 	.background(
 		color = Color.White,
 		shape = RoundedCornerShape(radius)
