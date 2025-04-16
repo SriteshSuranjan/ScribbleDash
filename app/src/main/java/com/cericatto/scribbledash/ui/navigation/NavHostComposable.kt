@@ -9,11 +9,11 @@ import androidx.navigation.compose.rememberNavController
 import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenRoot
 import com.cericatto.scribbledash.ui.draw.DrawScreenRoot
 import com.cericatto.scribbledash.ui.home.HomeScreenRoot
+import com.cericatto.scribbledash.ui.result.ResultScreenRoot
 
 @Composable
 fun NavHostComposable(
-	modifier: Modifier = Modifier,
-	navController: NavController
+	modifier: Modifier = Modifier
 ) {
 	val navController = rememberNavController()
 	NavHost(
@@ -37,6 +37,13 @@ fun NavHostComposable(
 		}
 		composable<Route.DrawScreen> {
 			DrawScreenRoot(
+				onNavigate = { navController.navigate(it) },
+				onNavigateUp = { navController.navigateUp() },
+				modifier = modifier
+			)
+		}
+		composable<Route.ResultScreen> {
+			ResultScreenRoot(
 				onNavigate = { navController.navigate(it) },
 				onNavigateUp = { navController.navigateUp() },
 				modifier = modifier

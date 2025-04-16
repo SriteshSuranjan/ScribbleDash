@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.rememberNavController
-import com.cericatto.scribbledash.ui.BottomNavigationBar
 import com.cericatto.scribbledash.ui.navigation.NavHostComposable
 import com.cericatto.scribbledash.ui.theme.ScribbleDashTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +19,7 @@ class MainActivity : ComponentActivity() {
 		enableEdgeToEdge()
 		setContent {
 			ScribbleDashTheme {
-				val navController = rememberNavController()
+//				val navController = rememberNavController()
 				Scaffold(
 //					bottomBar = {
 //						BottomNavigationBar(navController)
@@ -29,7 +27,6 @@ class MainActivity : ComponentActivity() {
 					modifier = Modifier.fillMaxSize()
 				) { innerPadding ->
 					NavHostComposable(
-						navController = navController,
 						modifier = Modifier.padding(innerPadding)
 					)
 				}

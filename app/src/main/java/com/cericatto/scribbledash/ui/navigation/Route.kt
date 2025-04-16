@@ -14,4 +14,7 @@ sealed interface Route {
 
 	@Serializable
 	data object DrawScreen: Route
+
+	@Serializable
+	data object ResultScreen: Route
 }
