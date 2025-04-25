@@ -2,6 +2,14 @@
 <resources>
     <string name="app_name">ScribbleDash</string>
 
+    <!-- Draw Screen titles -->
+    <string name="ready_set">Ready, set...</string>
+    <string name="time_to_draw">Time to draw!</string>
+    <string name="seconds_left">%1$d seconds left</string>
+    <string name="example">Example</string>
+    <string name="drawing">Drawing</string>
+    <string name="your_drawing">Your Drawing</string>
+
     <!-- Oops - Meh Feedback -->
     <string name="feedback_oops_1">Looks like Picasso had a rough day!</string>
     <string name="feedback_oops_2">Is this a drawing or a modern art statement? Either way, I\'m confused!</string>

@@ -3,6 +3,7 @@ package com.cericatto.scribbledash.ui.result
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cericatto.scribbledash.ui.common.UiEvent
+import com.cericatto.scribbledash.ui.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,4 +41,6 @@ class ResultScreenViewModel @Inject constructor(): ViewModel() {
 			)
 		}
 	}
+
+
 }

@@ -2,6 +2,7 @@ package com.cericatto.scribbledash.ui.common
 
 import android.app.Activity
 import android.content.res.Configuration
+import android.graphics.fonts.FontFamily
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -29,7 +29,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,6 +41,7 @@ import com.cericatto.scribbledash.ui.theme.bagelFatOneRegularFont
 import com.cericatto.scribbledash.ui.theme.clearCanvasButtonDisabled
 import com.cericatto.scribbledash.ui.theme.clearCanvasButtonEnabled
 import com.cericatto.scribbledash.ui.theme.closeScreenIconColor
+import com.cericatto.scribbledash.ui.theme.drawBackground
 import com.cericatto.scribbledash.ui.theme.historyButtonBackgroundDisabled
 import com.cericatto.scribbledash.ui.theme.historyButtonBackgroundEnabled
 import com.cericatto.scribbledash.ui.theme.historyButtonTintDisabled
@@ -52,16 +52,6 @@ import com.cericatto.scribbledash.ui.theme.scribbleSubtitleTextColor
 
 enum class UndoRedoType {
 	UNDO, REDO
-}
-
-@Composable
-fun getCanvasSize(): Dp {
-	val configuration = LocalConfiguration.current
-	return if (isLandscapeOrientation()) {
-		configuration.screenHeightDp.dp
-	} else {
-		configuration.screenWidthDp.dp
-	}
 }
 
 @Composable
@@ -124,15 +114,19 @@ fun ScribbleSubtitleText(
 	modifier: Modifier = Modifier.fillMaxWidth()
 		.padding(top = 5.dp),
 	text: String,
-	fontWeight: FontWeight = FontWeight.Normal
+	textColor: Color = scribbleSubtitleTextColor,
+	fontSize: TextUnit = 16.sp,
+	fontWeight: FontWeight = FontWeight.Normal,
+	fontFamily: androidx.compose.ui.text.font.FontFamily? = null
 ) {
 	Text(
 		text = text,
 		style = TextStyle(
-			color = scribbleSubtitleTextColor,
-			fontSize = 16.sp,
+			color = textColor,
+			fontSize = fontSize,
 			textAlign = TextAlign.Center,
-			fontWeight = fontWeight
+			fontWeight = fontWeight,
+			fontFamily = fontFamily
 		),
 		modifier = modifier
 	)
@@ -140,7 +134,8 @@ fun ScribbleSubtitleText(
 
 @Composable
 fun CloseScreenIcon(
-	onClose: () -> Unit
+	onClose: () -> Unit,
+	backgroundColor: Color = homeBackground
 ) {
 	Icon(
 		imageVector = Icons.Filled.Close,
@@ -155,7 +150,7 @@ fun CloseScreenIcon(
 			)
 			.padding(2.dp)
 			.background(
-				color = homeBackground,
+				color = backgroundColor,
 				shape = RoundedCornerShape(40.dp)
 			)
 			.size(32.dp)
@@ -294,5 +289,17 @@ fun ClearCanvasButtonEnabledPreview() {
 		state = DrawScreenState().copy(
 			paths = initPathList(initOffsetList())
 		)
+	)
+}
+
+@Preview(
+	name = "Enabled Preview",
+	showBackground = true
+)
+@Composable
+fun CloseScreenIconPreview() {
+	CloseScreenIcon(
+		onClose = {},
+		backgroundColor = drawBackground
 	)
 }

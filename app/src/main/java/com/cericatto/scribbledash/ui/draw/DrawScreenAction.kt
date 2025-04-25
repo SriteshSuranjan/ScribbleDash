@@ -12,4 +12,5 @@ sealed interface DrawScreenAction {
 	data object OnClearCanvasClick: DrawScreenAction
 	data object OnUndoButtonClicked: DrawScreenAction
 	data object OnRedoButtonClicked: DrawScreenAction
+	data object OnNavigateToResult : DrawScreenAction
 }

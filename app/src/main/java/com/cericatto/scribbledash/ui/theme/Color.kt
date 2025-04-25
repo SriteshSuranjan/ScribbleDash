@@ -17,6 +17,7 @@ val homeBackgroundTitleColor = Color(0xFF514437)
 val homeGreenBorder = Color(0xFF0FD180)
 
 val scribbleSubtitleTextColor = Color(0xFF7F7163)
+val scribbleSecondsLeftTextColor = Color(0xFF514437)
 val closeScreenIconColor = Color(0xFFA5978A)
 
 val historyButtonBackgroundEnabled = Color(0xFFEEE7E0)
@@ -25,3 +26,5 @@ val historyButtonTintEnabled = Color(0xFF514437)
 val historyButtonTintDisabled = Color(0xFFB9B1AA)
 val clearCanvasButtonEnabled = Color(0xFF49D280)
 val clearCanvasButtonDisabled = Color(0xFFe1D5CA)
+
+val tryAgainButtonBackground = Color(0xFF4B8CFF)

@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cericatto.scribbledash.model.PathData
 import com.cericatto.scribbledash.ui.common.UiEvent
+import com.cericatto.scribbledash.ui.navigation.Route
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Stack
 import javax.inject.Inject
+import kotlin.concurrent.timer
 
 @HiltViewModel
 class DrawScreenViewModel @Inject constructor() : ViewModel() {
@@ -25,6 +28,15 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 
 	private val _state = MutableStateFlow(DrawScreenState())
 	val state: StateFlow<DrawScreenState> = _state.asStateFlow()
+
+	init {
+		startCountdown()
+		_state.update {
+			it.copy(
+				drawableId = initDrawableList().random()
+			)
+		}
+	}
 
 	fun onAction(action: DrawScreenAction) {
 		when (action) {
@@ -36,6 +48,7 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 			is DrawScreenAction.OnSelectColor -> onSelectColor(action.color)
 			is DrawScreenAction.OnRedoButtonClicked -> onRedoButtonClicked()
 			is DrawScreenAction.OnUndoButtonClicked -> onUndoButtonClicked()
+			is DrawScreenAction.OnNavigateToResult -> navigateToResult()
 		}
 	}
 
@@ -61,6 +74,7 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 				}
 			}
 		}
+		println("[] ${_state.value.paths}")
 	}
 
 	private fun onNewPathStart() {
@@ -145,10 +159,39 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 		}
 	}
 
+	private fun startCountdown() {
+		viewModelScope.launch {
+			for (i in 3 downTo 0) {
+				_state.update {
+					it.copy(
+						timer = i
+					)
+				}
+				delay(1000)
+			}
+			println("Countdown finished!")
+			_state.update {
+				it.copy(
+					drawMode = true
+				)
+			}
+		}
+	}
+
 	private fun navigateUp() {
 		viewModelScope.launch {
 			_events.send(
 				UiEvent.NavigateUp
+			)
+		}
+	}
+
+	private fun navigateToResult() {
+		viewModelScope.launch {
+			_events.send(
+				UiEvent.Navigate(
+					Route.ResultScreen
+				)
 			)
 		}
 	}
