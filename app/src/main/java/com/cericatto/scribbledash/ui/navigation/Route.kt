@@ -4,9 +4,6 @@ import kotlinx.serialization.Serializable
 
 sealed interface Route {
 	@Serializable
-	data object LeftScreen: Route
-
-	@Serializable
 	data object HomeScreen: Route
 
 	@Serializable
@@ -17,4 +14,7 @@ sealed interface Route {
 
 	@Serializable
 	data object ResultScreen: Route
+
+	@Serializable
+	data object StatisticsScreen: Route
 }

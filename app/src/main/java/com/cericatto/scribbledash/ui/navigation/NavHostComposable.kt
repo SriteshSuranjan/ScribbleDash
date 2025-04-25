@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenRoot
 import com.cericatto.scribbledash.ui.draw.DrawScreenRoot
 import com.cericatto.scribbledash.ui.home.HomeScreenRoot
+import com.cericatto.scribbledash.ui.statistics.StatisticsScreenRoot
 import com.cericatto.scribbledash.ui.result.ResultScreenRoot
 
 @Composable
@@ -43,6 +44,13 @@ fun NavHostComposable(
 		}
 		composable<Route.ResultScreen> {
 			ResultScreenRoot(
+				onNavigate = { navController.navigate(it) },
+				onNavigateUp = { navController.navigateUp() },
+				modifier = modifier
+			)
+		}
+		composable<Route.StatisticsScreen> {
+			StatisticsScreenRoot(
 				onNavigate = { navController.navigate(it) },
 				onNavigateUp = { navController.navigateUp() },
 				modifier = modifier

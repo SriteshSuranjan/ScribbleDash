@@ -25,14 +25,14 @@ fun BottomNavigationBar(
 
 	val navigationItems = listOf(
 		NavigationItem(
-			title = "Left",
+			title = "Statistics",
 			icon = R.drawable.home_bottom_left,
-			route = Route.HomeScreen
+			route = Route.StatisticsScreen
 		),
 		NavigationItem(
 			title = "Home",
 			icon = R.drawable.home_bottom_right,
-			route = Route.LeftScreen
+			route = Route.HomeScreen
 		),
 	)
 
@@ -44,7 +44,7 @@ fun BottomNavigationBar(
 				selected = selectedNavigationIndex.intValue == index,
 				onClick = {
 					selectedNavigationIndex.intValue = index
-//					navController.navigate(item.route)
+					navController.navigate(item.route)
 				},
 				icon = {
 					Icon(

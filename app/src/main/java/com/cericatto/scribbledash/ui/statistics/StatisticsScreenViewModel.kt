@@ -1,4 +1,4 @@
-package com.cericatto.scribbledash.ui.result
+package com.cericatto.scribbledash.ui.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,18 +14,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ResultScreenViewModel @Inject constructor(): ViewModel() {
+class StatisticsScreenViewModel @Inject constructor(): ViewModel() {
 
 	private val _events = Channel<UiEvent>()
 	val events = _events.receiveAsFlow()
 
-	private val _state = MutableStateFlow(ResultScreenState())
-	val state: StateFlow<ResultScreenState> = _state.asStateFlow()
+	private val _state = MutableStateFlow(StatisticsScreenState())
+	val state: StateFlow<StatisticsScreenState> = _state.asStateFlow()
 
-	fun onAction(action: ResultScreenAction) {
+	fun onAction(action: StatisticsScreenAction) {
 		when (action) {
-			ResultScreenAction.NavigateUp -> navigateUp()
-			ResultScreenAction.OnTryAgainClicked -> TODO()
+			StatisticsScreenAction.NavigateUp -> navigateUp()
+			StatisticsScreenAction.OnTryAgainClicked -> TODO()
 		}
 	}
 
@@ -40,6 +40,4 @@ class ResultScreenViewModel @Inject constructor(): ViewModel() {
 			)
 		}
 	}
-
-
 }

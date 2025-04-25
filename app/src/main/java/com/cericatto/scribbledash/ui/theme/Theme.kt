@@ -39,6 +39,9 @@ private val LightColorScheme = lightColorScheme(
 val bagelFatOneRegularFont = FontFamily(
 	Font(R.font.bagel_fat_one_regular, FontWeight.Normal)
 )
+val outfitRegularFont = FontFamily(
+	Font(R.font.outfit_regular, FontWeight.Normal)
+)
 
 @Composable
 fun ScribbleDashTheme(
