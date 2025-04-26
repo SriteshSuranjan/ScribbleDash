@@ -10,6 +10,13 @@
     <string name="drawing">Drawing</string>
     <string name="your_drawing">Your Drawing</string>
 
+    <!-- Results Title -->
+    <string name="oops">Oops</string>
+    <string name="meh">Meh</string>
+    <string name="good">Good</string>
+    <string name="great">Great</string>
+    <string name="woohoo">Woohoo!</string>
+
     <!-- Oops - Meh Feedback -->
     <string name="feedback_oops_1">Looks like Picasso had a rough day!</string>
     <string name="feedback_oops_2">Is this a drawing or a modern art statement? Either way, I\'m confused!</string>

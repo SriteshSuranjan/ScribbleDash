@@ -57,6 +57,8 @@ import com.cericatto.scribbledash.ui.theme.bagelFatOneRegularFont
 import com.cericatto.scribbledash.ui.theme.drawBackground
 import com.cericatto.scribbledash.ui.theme.tryAgainButtonBackground
 import com.cericatto.scribbledash.ui.utils.contentColor
+import com.cericatto.scribbledash.ui.utils.getDrawingMessageId
+import com.cericatto.scribbledash.ui.utils.getDrawingTitleId
 
 @Composable
 fun ResultScreenRoot(
@@ -118,6 +120,9 @@ private fun ResultScreenContent(
 	onAction: (ResultScreenAction) -> Unit,
 	state: ResultScreenState
 ) {
+	val title = stringResource(getDrawingTitleId(state.score))
+	val message = stringResource(getDrawingMessageId(state.score))
+	println("Message: $message")
 	Column(
 		horizontalAlignment = Alignment.End,
 		verticalArrangement = Arrangement.Top,
@@ -131,11 +136,11 @@ private fun ResultScreenContent(
 			backgroundColor = drawBackground
 		)
 		ScribbleTitleText(
-			text = "100%",
+			text = "${state.score}%",
 			fontSize = 66.sp,
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(top = 100.dp)
+				.padding(top = 60.dp)
 		)
 		Box(
 			contentAlignment = Alignment.Center,
@@ -162,12 +167,12 @@ private fun ResultScreenContent(
 			)
 		}
 		ScribbleTitleText(
-			text = "Woohoo!",
+			text = title,
 			modifier = Modifier
 				.fillMaxWidth()
 		)
 		ScribbleSubtitleText(
-			text = "You've officially raised the bar!\nI'm going to need a ladder to reach it!",
+			text = message,
 			modifier = Modifier
 				.fillMaxWidth()
 				.weight(1f)
@@ -175,7 +180,7 @@ private fun ResultScreenContent(
 		TryAgainButton(
 			modifier = Modifier.fillMaxWidth()
 				.padding(horizontal = 20.dp)
-				.padding(top = 60.dp, bottom = 20.dp)
+				.padding(top = 40.dp, bottom = 10.dp)
 		)
 	}
 }
