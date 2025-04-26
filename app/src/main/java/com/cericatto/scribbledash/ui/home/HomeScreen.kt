@@ -31,9 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import com.cericatto.scribbledash.R
-import com.cericatto.scribbledash.ui.BottomNavigationBar
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ScribbleSubtitleText
 import com.cericatto.scribbledash.ui.common.ScribbleTitleText
@@ -47,7 +45,6 @@ import com.cericatto.scribbledash.ui.utils.contentColor
 
 @Composable
 fun HomeScreenRoot(
-	navController: NavController,
 	modifier: Modifier = Modifier,
 	onNavigate: (Route) -> Unit,
 	onNavigateUp: () -> Unit,
@@ -65,7 +62,6 @@ fun HomeScreenRoot(
 
 //	DynamicStatusBarColor()
 	HomeScreen(
-		navController = navController,
 		modifier = modifier,
 		onAction = viewModel::onAction,
 		state = state
@@ -75,10 +71,9 @@ fun HomeScreenRoot(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun HomeScreen(
-	navController: NavController,
-	modifier: Modifier = Modifier,
 	onAction: (HomeScreenAction) -> Unit,
-	state: HomeScreenState
+	state: HomeScreenState,
+	modifier: Modifier = Modifier
 ) {
 	if (state.loading) {
 		Box(
@@ -95,9 +90,6 @@ private fun HomeScreen(
 		}
 	} else {
 		Scaffold(
-			bottomBar = {
-				BottomNavigationBar(navController)
-			},
 			modifier = Modifier.fillMaxSize()
 		) { _ ->
 			HomeScreenContent(
@@ -118,7 +110,8 @@ private fun HomeScreenContent(
 	Column(
 		horizontalAlignment = Alignment.Start,
 		verticalArrangement = Arrangement.Top,
-		modifier = modifier.background(color = homeBackground)
+		modifier = modifier
+			.background(color = homeBackground)
 			.fillMaxSize()
 			.padding(10.dp)
 	) {

@@ -2,7 +2,6 @@ package com.cericatto.scribbledash.ui.common
 
 import android.app.Activity
 import android.content.res.Configuration
-import android.graphics.fonts.FontFamily
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

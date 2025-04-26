@@ -1,5 +1,6 @@
 package com.cericatto.scribbledash.ui.statistics
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +32,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cericatto.scribbledash.R
 import com.cericatto.scribbledash.ui.common.ScribbleTitleText
-import com.cericatto.scribbledash.ui.navigation.Route
 import com.cericatto.scribbledash.ui.theme.drawBackground
 import com.cericatto.scribbledash.ui.theme.outfitRegularFont
 import com.cericatto.scribbledash.ui.theme.scribbleSubtitleTextColor
@@ -40,8 +41,6 @@ import com.cericatto.scribbledash.ui.utils.contentColor
 @Composable
 fun StatisticsScreenRoot(
 	modifier: Modifier = Modifier,
-	onNavigate: (Route) -> Unit,
-	onNavigateUp: () -> Unit,
 	viewModel: StatisticsScreenViewModel = hiltViewModel()
 ) {
 	val state by viewModel.state.collectAsStateWithLifecycle()
@@ -54,11 +53,12 @@ fun StatisticsScreenRoot(
 	)
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 private fun StatisticsScreen(
-	modifier: Modifier = Modifier,
 	onAction: (StatisticsScreenAction) -> Unit,
-	state: StatisticsScreenState
+	state: StatisticsScreenState,
+	modifier: Modifier = Modifier
 ) {
 	if (state.loading) {
 		Box(
@@ -74,19 +74,23 @@ private fun StatisticsScreen(
 			)
 		}
 	} else {
-		StatisticsScreenContent(
-			modifier = modifier,
-			onAction = onAction,
-			state = state
-		)
+		Scaffold(
+			modifier = Modifier.fillMaxSize()
+		) { _ ->
+			StatisticsScreenContent(
+				modifier = modifier,
+				onAction = onAction,
+				state = state
+			)
+		}
 	}
 }
 
 @Composable
 private fun StatisticsScreenContent(
-	modifier: Modifier = Modifier,
 	onAction: (StatisticsScreenAction) -> Unit,
-	state: StatisticsScreenState
+	state: StatisticsScreenState,
+	modifier: Modifier = Modifier
 ) {
 	Column(
 		horizontalAlignment = Alignment.Start,
@@ -95,13 +99,14 @@ private fun StatisticsScreenContent(
 			.background(color = drawBackground)
 			.fillMaxSize()
 			.padding(10.dp)
+			.padding(top = 5.dp)
 	) {
 		Text(
 			text = "Statistics",
 			color = titleColor,
 			fontFamily = outfitRegularFont,
 			fontWeight = FontWeight.Bold,
-			fontSize = 24.sp
+			fontSize = 30.sp
 		)
 		Spacer(
 			modifier = Modifier.padding(vertical = 15.dp)

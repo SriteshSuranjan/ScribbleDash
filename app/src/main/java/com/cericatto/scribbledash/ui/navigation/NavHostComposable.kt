@@ -2,27 +2,27 @@ package com.cericatto.scribbledash.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenRoot
 import com.cericatto.scribbledash.ui.draw.DrawScreenRoot
 import com.cericatto.scribbledash.ui.home.HomeScreenRoot
-import com.cericatto.scribbledash.ui.statistics.StatisticsScreenRoot
 import com.cericatto.scribbledash.ui.result.ResultScreenRoot
+import com.cericatto.scribbledash.ui.statistics.StatisticsScreenRoot
 
 @Composable
 fun NavHostComposable(
+	navController: NavHostController,
 	modifier: Modifier = Modifier
 ) {
-	val navController = rememberNavController()
 	NavHost(
 		navController = navController,
-		startDestination = Route.HomeScreen
+		startDestination = Route.HomeScreen,
+//		modifier = modifier
 	) {
 		composable<Route.HomeScreen> {
 			HomeScreenRoot(
-				navController = navController,
 				onNavigate = { navController.navigate(it) },
 				onNavigateUp = { navController.navigateUp() },
 				modifier = modifier
@@ -51,8 +51,6 @@ fun NavHostComposable(
 		}
 		composable<Route.StatisticsScreen> {
 			StatisticsScreenRoot(
-				onNavigate = { navController.navigate(it) },
-				onNavigateUp = { navController.navigateUp() },
 				modifier = modifier
 			)
 		}
