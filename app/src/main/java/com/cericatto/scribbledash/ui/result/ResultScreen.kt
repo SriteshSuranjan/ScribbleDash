@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +29,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -36,12 +39,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastForEach
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.createBitmap
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cericatto.scribbledash.R
-import com.cericatto.scribbledash.model.initOffsetList
 import com.cericatto.scribbledash.ui.common.CloseScreenIcon
 import com.cericatto.scribbledash.ui.common.ObserveAsEvents
 import com.cericatto.scribbledash.ui.common.ResultCanvasType
@@ -62,9 +65,10 @@ import com.cericatto.scribbledash.ui.utils.getDrawingTitleId
 
 @Composable
 fun ResultScreenRoot(
-	modifier: Modifier = Modifier,
 	onNavigate: (Route) -> Unit,
 	onNavigateUp: () -> Unit,
+	paths: String? = null,
+	modifier: Modifier = Modifier,
 	viewModel: ResultScreenViewModel = hiltViewModel()
 ) {
 	val state by viewModel.state.collectAsStateWithLifecycle()
@@ -75,6 +79,10 @@ fun ResultScreenRoot(
 			is UiEvent.Navigate -> onNavigate(event.route)
 			else -> Unit
 		}
+	}
+
+	LaunchedEffect(key1 = paths) {
+		viewModel.updatePaths(paths)
 	}
 
 //	DynamicStatusBarColor()
@@ -122,7 +130,6 @@ private fun ResultScreenContent(
 ) {
 	val title = stringResource(getDrawingTitleId(state.score))
 	val message = stringResource(getDrawingMessageId(state.score))
-	println("Message: $message")
 	Column(
 		horizontalAlignment = Alignment.End,
 		verticalArrangement = Arrangement.Top,
@@ -260,10 +267,23 @@ private fun GridCanvas(
 				canvasHeight = canvasHeight
 			)
 			if (type == ResultCanvasType.DRAWING) {
+				/*
 				drawScribblePath(
 					path = initOffsetList(),
 					color = Color.Black
 				)
+				 */
+				rotate(degrees = 10f) {
+//					scale(scaleX = 0.5f, scaleY = 0.5f) {
+						state.paths.fastForEach { pathData ->
+							drawScribblePath(
+								path = pathData.path,
+								color = pathData.color,
+								factor = 2f
+							)
+						}
+//					}
+				}
 			} else {
 				drawable?.let {
 					// Convert Drawable to Bitmap

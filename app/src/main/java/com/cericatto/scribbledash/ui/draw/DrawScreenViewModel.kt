@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.cericatto.scribbledash.model.PathData
 import com.cericatto.scribbledash.ui.common.UiEvent
 import com.cericatto.scribbledash.ui.navigation.Route
+import com.cericatto.scribbledash.ui.navigation.pathsToString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
@@ -16,9 +17,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import java.util.Stack
 import javax.inject.Inject
-import kotlin.concurrent.timer
 
 @HiltViewModel
 class DrawScreenViewModel @Inject constructor() : ViewModel() {
@@ -33,7 +34,8 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 		startCountdown()
 		_state.update {
 			it.copy(
-				drawableId = initDrawableList().random()
+				drawableId = initDrawableList().random(),
+				paths = emptyList(),
 			)
 		}
 	}
@@ -188,11 +190,15 @@ class DrawScreenViewModel @Inject constructor() : ViewModel() {
 
 	private fun navigateToResult() {
 		viewModelScope.launch {
-			_events.send(
-				UiEvent.Navigate(
-					Route.ResultScreen
+			val paths = _state.value.paths
+			val pathsString = paths.pathsToString()
+			val encodedPaths = URLEncoder.encode(pathsString, "UTF-8")
+			val route = UiEvent.Navigate(
+				Route.ResultScreen(
+					paths = encodedPaths
 				)
 			)
+			_events.send(route)
 		}
 	}
 }

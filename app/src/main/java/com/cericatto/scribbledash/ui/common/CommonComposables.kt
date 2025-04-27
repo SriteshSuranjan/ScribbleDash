@@ -206,7 +206,8 @@ fun UndoRedoButton(
 @Composable
 fun ClearCanvasButton(
 	modifier: Modifier = Modifier,
-	text: String = "Clear Canvas",
+//	text: String = "Clear Canvas",
+	text: String = "Done",
 	state: DrawScreenState,
 	onClick: () -> Unit = {}
 ) {
@@ -221,6 +222,7 @@ fun ClearCanvasButton(
 			textAlign = TextAlign.Center
 		),
 		modifier = modifier
+			.padding(start = 80.dp)
 			.clickable {
 				onClick()
 			}

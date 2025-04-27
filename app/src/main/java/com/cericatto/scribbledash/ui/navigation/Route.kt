@@ -13,7 +13,9 @@ sealed interface Route {
 	data object DrawScreen: Route
 
 	@Serializable
-	data object ResultScreen: Route
+	data class ResultScreen(
+		val paths: String? = null
+	): Route
 
 	@Serializable
 	data object StatisticsScreen: Route

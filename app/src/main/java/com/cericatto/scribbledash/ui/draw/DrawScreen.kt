@@ -206,8 +206,11 @@ private fun BottomDrawMenu(
 			modifier = Modifier.weight(4f),
 			state = state,
 			onClick = {
-//				onAction(DrawScreenAction.OnClearCanvasClick)
-				onAction(DrawScreenAction.OnNavigateToResult)
+				val isEnabled = state.paths.isNotEmpty()
+				if (isEnabled) {
+//					onAction(DrawScreenAction.OnClearCanvasClick)
+					onAction(DrawScreenAction.OnNavigateToResult)
+				}
 			}
 		)
 	}
@@ -362,6 +365,6 @@ private fun DrawScreenContentPreview() {
 	DrawScreenContent(
 		modifier = Modifier,
 		onAction = {},
-		state = DrawScreenState()
+		state = DrawScreenState().copy(drawMode = true)
 	)
 }

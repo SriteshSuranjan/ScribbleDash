@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.cericatto.scribbledash.ui.difficulty.DifficultyScreenRoot
 import com.cericatto.scribbledash.ui.draw.DrawScreenRoot
 import com.cericatto.scribbledash.ui.home.HomeScreenRoot
@@ -42,13 +43,16 @@ fun NavHostComposable(
 				modifier = modifier
 			)
 		}
-		composable<Route.ResultScreen> {
+		composable<Route.ResultScreen> { backStackEntry ->
+			val args = backStackEntry.toRoute<Route.ResultScreen>()
 			ResultScreenRoot(
 				onNavigate = { navController.navigate(it) },
 				onNavigateUp = { navController.navigateUp() },
+				paths = args.paths,
 				modifier = modifier
 			)
 		}
+
 		composable<Route.StatisticsScreen> {
 			StatisticsScreenRoot(
 				modifier = modifier
