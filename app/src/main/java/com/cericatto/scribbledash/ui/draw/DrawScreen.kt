@@ -327,7 +327,6 @@ private fun GridCanvas(
 	}
 }
 
-// Extension function on DrawScope to draw the grid lines
 fun DrawScope.customLines(
 	gridSize: Int,
 	cellSize: Float,

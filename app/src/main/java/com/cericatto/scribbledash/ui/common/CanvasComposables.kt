@@ -69,9 +69,13 @@ fun DrawScope.drawScribblePath(
 	color: Color = Color.LightGray.copy(alpha = 0.4f),
 	thickness: Float = 10f,
 	factor: Float = 1f,
-	errorMargin: Float = 0.02f
+	errorMargin: Float = 0f
 ) {
-	val scaledPaths = path.map { scalePath(it, 1 / factor - errorMargin) }
+	val scaledPaths = if (factor != 1f) {
+		path.map { scalePath(it, 1 / factor - errorMargin) }
+	} else {
+		path
+	}
 	val smoothedPath = Path().apply {
 		if (scaledPaths.isNotEmpty()) {
 			moveTo(scaledPaths.first().x, scaledPaths.first().y)

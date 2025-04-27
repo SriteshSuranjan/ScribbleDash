@@ -197,9 +197,10 @@ private fun DrawCanvas(
 	modifier: Modifier = Modifier,
 	onAction: (ResultScreenAction) -> Unit,
 	state: ResultScreenState,
-	type: ResultCanvasType
+	type: ResultCanvasType,
+	scaleFactor: Float = 2f
 ) {
-	val canvasSize = getCanvasSize() / 2
+	val canvasSize = getCanvasSize() / scaleFactor
 	Box(
 		contentAlignment = Alignment.Center,
 		modifier = modifier
@@ -214,7 +215,8 @@ private fun DrawCanvas(
 			canvasSize = canvasSize,
 			onAction = onAction,
 			state = state,
-			type = type
+			type = type,
+			scaleFactor = scaleFactor
 		)
 	}
 }
@@ -228,12 +230,18 @@ private fun GridCanvas(
 	gridSize: Int = 3,
 	lineColor: Color = Color.LightGray.copy(alpha = 0.4f),
 	lineThickness: Float = 1f,
-	type: ResultCanvasType
+	type: ResultCanvasType,
+	scaleFactor: Float
 ) {
 	val titleText = if (type == ResultCanvasType.EXAMPLE) {
 		stringResource(R.string.example)
 	} else {
 		stringResource(R.string.drawing)
+	}
+	val degrees = if (type == ResultCanvasType.EXAMPLE) {
+		-10f
+	} else {
+		10f
 	}
 	val context = LocalContext.current
 	val drawable: Drawable? = ContextCompat.getDrawable(
@@ -273,16 +281,15 @@ private fun GridCanvas(
 					color = Color.Black
 				)
 				 */
-				rotate(degrees = 10f) {
-//					scale(scaleX = 0.5f, scaleY = 0.5f) {
-						state.paths.fastForEach { pathData ->
-							drawScribblePath(
-								path = pathData.path,
-								color = pathData.color,
-								factor = 2f
-							)
-						}
-//					}
+				rotate(degrees = degrees) {
+					state.paths.fastForEach { pathData ->
+						drawScribblePath(
+							path = pathData.path,
+							color = pathData.color,
+							factor = scaleFactor,
+							errorMargin = 0.02f
+						)
+					}
 				}
 			} else {
 				drawable?.let {
