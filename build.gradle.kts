@@ -1,21 +1,15 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = "2.0.21" // Define the Kotlin version you're using
-    ext.ksp_version = "2.0.21" // Define the KSP version you're using
-
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        // Kotlin plugin for Gradle
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-        // KSP plugin
-        classpath("com.google.devtools.ksp:symbol-processing-api:$ksp_version")
-        // Hilt plugin (optional, based on your app requirements)
-        classpath("com.google.dagger:hilt-android-gradle-plugin:2.42")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21")
+        classpath("com.google.devtools.ksp:symbol-processing-api:2.0.21")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.48") // Use your actual Hilt version here
     }
 }
 
