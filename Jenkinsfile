@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64'
+        JAVA_HOME = '/usr/lib/jvm/java-17-openjdk-amd64'
         ANDROID_HOME = '/opt/android-sdk'
        // GRADLE_USER_HOME = "${HOME}/.gradle"
        // PATH = "${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/platform-tools:${PATH}"
